@@ -1,0 +1,19 @@
+Id,Name,Shape Library,Page ID,Contained By,Group,Text Area 1,Text Area 2,Text Area 3
+1,Page,,,,,Page 1,,
+2,Class,UML,1,,,Timer,"+ startTime: Date
++ endTime: Date","+ startTimer():
++ endTimer():
++ getDifference(): double"
+3,Class,UML,1,,,Flight,"+ fuelChecks:ArrayList<FuelCheck>
++ reserve20: Timer
++ reserve30: Timer
++ timeToBurnout: Timer","+ startCheck(int initAmount, String fuelUnit, ArrayList<Integer>):boolean
++ stopCheck(int finalAmount):boolean
++ cancelCheck():Void"
+4,Class,UML,1,,,FuelCheck,"+ fuelUnit:String = ""lbs""
++ initAmount:int = 0
++ finalAmount:int = 0
++ burnRate:double = 0
++ externalFuelTanks:ArrayList<Integer>
++ timer:Timer","+ FuelCheck(int initAmount, String fuelUnit, ArrayList<Integer> externalFuelTanks)
++ calculate(int finalAmount):double"
