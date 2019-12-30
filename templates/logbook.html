@@ -41,15 +41,56 @@
         milStyleDate = day+months[month-1]+year.slice(2);
         document.getElementById("milDate").innerHTML=milStyleDate;
       }
+
+      function calculateFlightTime() {
+        /* Function to calculate the time between take off and landing times and display it in the proper format
+           Times are converted to floats with 1 decimal place, 1.0 = 1 hour and 0.1 = 6 minutes as requested
+         */
+        var start = document.getElementById("starttime").value,
+                end = document.getElementById("endtime").value,
+                startminutes,
+                endminutes,
+                total;
+
+        start = start.split(":"); //initially received as a string with format 16:11 (24 hour)
+        end = end.split(":");
+        startminutes = parseInt(start[0]) * 60 + parseInt(start[1]);
+        endminutes = parseInt(end[0]) * 60 + parseInt(end[1]);
+        total = endminutes - startminutes;
+
+        if (endminutes < startminutes) {
+          total += 24*60; //to account for when a flight starts at 11pm on one day and ends at 3 am the next day
+        }
+        total = total / 60; //convert to 6 minute intervals
+        total = total.toFixed(1);
+        document.getElementById("flighthours").innerHTML = total;
+
+      }
     </script>
 
     <h1> Logbook </h1>
     <p> Log Flight Hours </p>
 
     <form>
-    Date:
-    <input onchange="setMilDate()" id="datePicker" type="date" />
-    <p id="milDate"></p>
+      Date:
+      <input onchange="setMilDate()" id="datePicker" type="date" />
+      <p id="milDate"></p>
+      Role:
+      <input id="role" type="text"/>
+      System:
+      <input id="system" type="text"/>
+      Takeoff Time:
+      <input id="starttime" type="time">
+      Landing Time:
+      <input id="endtime" type="time">
+      Tail Number:
+      <input id="tailnum" type="text"/>
+      ACFT:
+      <input id="aircraft" type="text"/>
+      <input id="submit" type="button" onclick="calculateFlightTime()"/>
+      <p></p>
+      Flight Hours:
+      <a id="flighthours"><a/>
     </form>
 
     {% endblock %}
