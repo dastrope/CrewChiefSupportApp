@@ -4,13 +4,53 @@
     <meta charset="utf-8">
     <title>Logbook</title>
   </head>
-  <body>
+
+  <body onload="setDefaultDate()">
     {% extends "template.html" %}
     {% block content %}
+    <script>
+      function setDefaultDate(){
+        /* Set the date in the datepicker element to current day by default */
+        var date = new Date(),
+            day = date.getDate(),
+            month = date.getMonth()+1, //January is 0 by default
+            year = date.getFullYear(),
+            normalDate;
+
+        //yyyy-mm-dd string format required to set the value in the datepicker
+        if(day < 10){
+            day = "0"+day;
+        }
+        if(month < 10){
+            month = "0"+month;
+        }
+
+        normalDate = year+"-"+month+"-"+day; //yyyy-mm-dd string
+        document.getElementById("datePicker").value=normalDate;
+        setMilDate(); //update separate element
+      }
+
+      function setMilDate(){
+        /* Set separate element to display date in ddMONyy format ex 29DEC19 */
+        var date = document.getElementById("datePicker").value.split("-");
+        var milStyleDate;
+        var months = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"];
+        var day = date[2],
+            month = parseInt(date[1]),
+            year = date[0];
+        milStyleDate = day+months[month-1]+year.slice(2);
+        document.getElementById("milDate").innerHTML=milStyleDate;
+      }
+    </script>
 
     <h1> Logbook </h1>
-    <p> Log Flight Hours</p>
-    <p> Aircraft </p>
+    <p> Log Flight Hours </p>
+
+    <form>
+    Date:
+    <input onchange="setMilDate()" id="datePicker" type="date" />
+    <p id="milDate"></p>
+    </form>
 
     {% endblock %}
   </body>
