@@ -39,7 +39,7 @@
             month = parseInt(date[1]),
             year = date[0];
         milStyleDate = day+months[month-1]+year.slice(2);
-        document.getElementById("milDate").innerHTML=milStyleDate;
+        document.getElementById("milDate").innerHTML = milStyleDate;
       }
 
       function calculateFlightTime() {
@@ -66,6 +66,16 @@
         document.getElementById("flighthours").innerHTML = total;
 
       }
+      function updateAll(){
+        setMilDate();
+        calculateFlightTime();
+        document.getElementById("roledisplay").innerHTML=document.getElementById("role").value;
+        document.getElementById("systemdisplay").innerHTML=document.getElementById("system").value;
+        document.getElementById("starttimedisplay").innerHTML=document.getElementById("starttime").value;
+        document.getElementById("endtimedisplay").innerHTML=document.getElementById("endtime").value;
+        document.getElementById("tailnumdisplay").innerHTML=document.getElementById("tailnum").value;
+        document.getElementById("aircraftdisplay").innerHTML=document.getElementById("aircraft").value;
+      }
     </script>
 
     <h1> Logbook </h1>
@@ -73,24 +83,44 @@
 
     <form>
       Date:
-      <input onchange="setMilDate()" id="datePicker" type="date" />
-      <p id="milDate"></p>
+      <input onchange="updateAll()" id="datePicker" type="date" />
       Role:
-      <input id="role" type="text"/>
+      <input id="role" size="5" onchange="updateAll()" autocomplete="on" type="text"/>
       System:
-      <input id="system" type="text"/>
+      <input id="system" size="5" onchange="updateAll()" autocomplete="on" type="text"/>
       Takeoff Time:
-      <input id="starttime" type="time">
+      <input id="starttime" onchange="updateAll()" type="time">
       Landing Time:
-      <input id="endtime" type="time">
+      <input id="endtime" onchange="updateAll()" type="time">
       Tail Number:
-      <input id="tailnum" type="text"/>
+      <input id="tailnum" size="15" onchange="updateAll()" autocomplete="on" type="text"/>
       ACFT:
-      <input id="aircraft" type="text"/>
-      <input id="submit" type="button" onclick="calculateFlightTime()"/>
-      <p></p>
+      <input id="aircraft" size="15" onchange="updateAll()" autocomplete="on" type="text"/>
+      <input id="submit" type="button"/>
+      <p>
+      Date:
+      <a id="milDate"></a>
+      <br>
+      Role:
+      <a id="roledisplay"></a>
+      <br>
+      System:
+      <a id="systemdisplay"></a>
+      <br>
+      Takeoff:
+      <a id="starttimedisplay"></a>
+      <br>
+      Landing:
+      <a id="endtimedisplay"></a>
+      <br>
       Flight Hours:
       <a id="flighthours"><a/>
+      <br>
+      Tail Number:
+      <a id="tailnumdisplay"></a>
+      <br>
+      Aircraft:
+      <a id="aircraftdisplay"></a>
     </form>
 
     {% endblock %}
