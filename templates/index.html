@@ -1,13 +1,8 @@
-<!DOCTYPE html>
-<html lang="en" dir="ltr">
-  <head>
-    <meta charset="utf-8">
-    <title>Logbook</title>
-  </head>
+<!-- index.html -->
+{% extends 'layout.html' %}
 
-  <body onload="setDefaultDate()">
-    {% extends "template.html" %}
-    {% block content %}
+{% block content %}
+ <body onload="setDefaultDate()">
     <script>
       function setDefaultDate(){
         /* Set the date in the datepicker element to current day by default */
@@ -26,13 +21,14 @@
         }
 
         normalDate = year+"-"+month+"-"+day; //yyyy-mm-dd string
-        document.getElementById("datePicker").value=normalDate;
+        document.getElementById("startDate").value=normalDate;
+        document.getElementById("endDate").value=normalDate;
         setMilDate(); //update separate element
       }
 
       function setMilDate(){
         /* Set separate element to display date in ddMONyy format ex 29DEC19 */
-        var date = document.getElementById("datePicker").value.split("-");
+        var date = document.getElementById("startDate").value.split("-");
         var milStyleDate;
         var months = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"];
         var day = date[2],
@@ -46,24 +42,30 @@
         /* Function to calculate the time between take off and landing times and display it in the proper format
            Times are converted to floats with 1 decimal place, 1.0 = 1 hour and 0.1 = 6 minutes as requested
          */
-        var start = document.getElementById("starttime").value,
-                end = document.getElementById("endtime").value,
-                startminutes,
-                endminutes,
-                total;
+        var startTime = document.getElementById("starttime").value,
+                endTime = document.getElementById("endtime").value,
+                startDate = document.getElementById("startDate").value,
+                endDate = document.getElementById("endDate").value,
+                startMinutes,
+                endMinutes,
+                days,
+                flightTime;
 
-        start = start.split(":"); //initially received as a string with format 16:11 (24 hour)
-        end = end.split(":");
-        startminutes = parseInt(start[0]) * 60 + parseInt(start[1]);
-        endminutes = parseInt(end[0]) * 60 + parseInt(end[1]);
-        total = endminutes - startminutes;
-
-        if (endminutes < startminutes) {
-          total += 24*60; //to account for when a flight starts at 11pm on one day and ends at 3 am the next day
+        startTime = startTime.split(":"); //initially received as a string with format 16:11 (24 hour)
+        endTime = endTime.split(":");
+        startMinutes = parseInt(startTime[0]) * 60 + parseInt(startTime[1]);
+        endMinutes = parseInt(endTime[0]) * 60 + parseInt(endTime[1]);
+        flightTime = endMinutes - startMinutes;
+        if (endMinutes < startMinutes || startDate !== endDate) {
+          //to account for when a flight starts at 11pm on one day and ends at 3 am the next day
+          startDate = startDate.split("-");
+          endDate = endDate.split("-");
+          days = parseInt(endDate[2]) - parseInt(startDate[2]);
+          flightTime += days*24*60;
         }
-        total = total / 60; //convert to 6 minute intervals
-        total = total.toFixed(1);
-        document.getElementById("flighthours").innerHTML = total;
+        flightTime = flightTime / 60; //convert to 6 minute intervals
+        flightTime = flightTime.toFixed(1);
+        document.getElementById("flighthours").innerHTML = flightTime;
 
       }
       function updateAll(){
@@ -82,16 +84,21 @@
     <p> Log Flight Hours </p>
 
     <form>
-      Date:
-      <input onchange="updateAll()" id="datePicker" type="date" />
+      <div>
+        Start Date:
+        <input onchange="updateAll()" id="startDate" type="date"/>
+        End Date:
+        <input onchange="updateAll()" id="endDate" type="date"/>
+        Takeoff Time:
+        <input id="starttime" onchange="updateAll()" type="time">
+        Landing Time:
+        <input id="endtime" onchange="updateAll()" type="time">
+      </div>
+      <br>
       Role:
       <input id="role" size="5" onchange="updateAll()" autocomplete="on" type="text"/>
       System:
       <input id="system" size="5" onchange="updateAll()" autocomplete="on" type="text"/>
-      Takeoff Time:
-      <input id="starttime" onchange="updateAll()" type="time">
-      Landing Time:
-      <input id="endtime" onchange="updateAll()" type="time">
       Tail Number:
       <input id="tailnum" size="15" onchange="updateAll()" autocomplete="on" type="text"/>
       ACFT:
@@ -122,7 +129,5 @@
       Aircraft:
       <a id="aircraftdisplay"></a>
     </form>
-
-    {% endblock %}
   </body>
-</html>
+{% endblock %}
